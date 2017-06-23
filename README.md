@@ -6,7 +6,7 @@ This folder contains all the information regarding the series of three labs orga
 
 ## R and Rstudio
 
-In order to get the most out of the labs, the students are required to have installed <a href="http://www.r-project.org2">R</a> and <a href="http://www.rstudio.com">RStudio</a>. In order to get familiarised with R, there are multiple tutorials and MOOCS online, I recommend the <a href="https://www.coursera.org/learn/r-programming">Coursera R Programming</a> course but you will find many others. The studentds are also required to do the following homework in `Swirl`.
+In order to get the most out of the labs, the students are required to have installed <a href="http://www.r-project.org2">R</a> and <a href="http://www.rstudio.com">RStudio</a>. In order to get familiarised with R, there are multiple tutorials and MOOCS on-line, I recommend the <a href="https://www.coursera.org/learn/r-programming">Coursera R Programming</a> course but you will find many others. The students are also required to do the following homework in `Swirl`.
 
 ### Swirl
 
@@ -56,7 +56,7 @@ install.packages("pdfetch")
 
 ### PKSFC
 
-In order to design, simulate and analyse SFC models, we will use the <a href="https://github.com/S120/PKSFC">PKSFC package</a>. The package can be downloaded in the root folder. Note that the package needs a version of R above or equal to 3.1.1. Furthermore, you will need to install expm and igraph. You will hence need to use the following command.
+In order to design, simulate and analyse SFC models, we will use the <a href="https://github.com/S120/PKSFC">PKSFC package</a>. The package can be downloaded in the root folder. Note that the package needs a version of R above or equal to 3.1.1. Furthermore, you will need to install `expm`, `igraph` and `networkD3`. You will hence need to use the following command.
 
 ```{r, eval=F}
 install.packages("expm")
@@ -64,7 +64,7 @@ install.packages("igraph")
 install.packages("networkD3")
 ```
 
-Once those packages have been installed, download the PK-SFC package on your computer and store it in a folder of your choice. Make sure that the name of the package is "PKSFC_1.5.tar.gz". Then run the following comand line. It will install the package from your local folder where 'pathToYourFolder' represent the path to the folder where you downloaded the package.
+Once those packages have been installed, download the PK-SFC package on your computer and store it in a folder of your choice. Make sure that the name of the package is "PKSFC_1.5.tar.gz". Then run the following command line. It will install the package from your local folder where 'pathToYourFolder' represent the path to the folder where you downloaded the package.
 
 ```{r, eval=F}
 install.packages("pathToYourFolder/PKSFC_1.5.tar.gz",repos = NULL, type="source")
@@ -82,7 +82,7 @@ library(PKSFC)
 
 Godley, W. and M. Lavoie (2007) “Monetary Economics: An Integrated Approach to Credit, Money, Income, Production and Wealth”, Basingstoke, Palgrave Macmillan. Chapters 1-2
 
-<a href="http://ec.europa.eu/eurostat/cache/metadata/Annexes/nasa_10_f_esms_an1.pdf">European System of Accouns (2010)</a>
+<a href="http://ec.europa.eu/eurostat/cache/metadata/Annexes/nasa_10_f_esms_an1.pdf">European System of Accounts (2010)</a>
 
 <a href="http://ec.europa.eu/eurostat/web/sector-accounts">Sectoral account description by Eurostat</a>
 
@@ -92,11 +92,11 @@ Godley, W. and M. Lavoie (2007) “Monetary Economics: An Integrated Approach to
 
 Godley, W. and M. Lavoie (2007) “Monetary Economics: An Integrated Approach to Credit, Money, Income, Production and Wealth”, Basingstoke, Palgrave Macmillan. Chapters 3-4.
 
-Caverzasi, E. and A Godin (2015) “Post-Keynesian stock-flow-consistent modelling: a survey”, *Cambridge Journal of Economics*, vol. 39 (1), 157-187.
+Caverzasi, E. and A Godin (2015) “Post-Keynesian stock-flow-consistent modelling: a survey”, *Cambridge Journal of Economics*, 39 (1), 157-187.
 
 Fennell, P., O'Sullivan, D., Godin, A. and S. Kinsella (2016) "Is it possible to visualise any stock flow consistent model as a directed acyclic graph?", *Computational Economics*, 48(2), 307-316.
 
-<a href="https://github.com/S120/PKSFC/tree/master/Tutorials">PKSFC Tutotial webpages</a>
+<a href="https://github.com/S120/PKSFC/tree/master/Tutorials">PKSFC Tutorial webpages</a>
 
 ### Lab 3 Empirically calibrated simple SFC models
 
@@ -104,4 +104,4 @@ Godley, W. and M. Lavoie (2007) “Monetary Economics: An Integrated Approach to
 
 Burgess, S., Burrows, O., Godin, A., Kinsella, S. and S. Millard (2016) "A dynamic model of financial balances for the United Kingdom". Bank of England *Staff Working Paper*, no. 614.
 
-<a href="https://github.com/S120/PKSFC/tree/master/Tutorials">PKSFC Tutotial webpages</a>
+<a href="https://github.com/S120/PKSFC/tree/master/Tutorials">PKSFC Tutorial webpages</a>
