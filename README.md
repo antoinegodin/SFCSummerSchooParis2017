@@ -76,6 +76,27 @@ You are almost set, now you need to load the package. In order to do so, you sho
 library(PKSFC)
 ```
 
+The following paper <a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=2492242">Visualising Stock Flow Consistent Models as Directed Acyclic Graphs</a>, shows how any SFC model can be seen as a directed graph (DG) and allows for a different representation than the traditional Transaction-Flow and Balance Sheet Matrices. Obviously these representations are more useful for large models than small models. The package includes the functions needed to obtain the DG representation. However, in order to use these functionalities, the package `Rgraphviz` needs to be installed. Because it is not stored in CRAN, you need to use the following commands to install it.
+
+According to the latest [README](http://www.bioconductor.org/packages/2.11/bioc/readmes/Rgraphviz/README):
+
+```{r,eval=FALSE}
+Rgraphviz now comes bundles with Graphviz. This should greatly simplify installation 
+on all platforms, compared with earlier versions.
+```
+
+Bioconductor 2.11 contains a lot of libraries that you might not want or need, but it does seem to be the easiest path to achieving what you want. These are the instructions on the [Rgraphviz homepage](http://www.bioconductor.org/packages/2.11/bioc/html/Rgraphviz.html):
+
+```{r,eval=F}
+source("http://bioconductor.org/biocLite.R")
+biocLite("Rgraphviz")
+```
+
+In order to test for the success of the installation:
+```{r}
+library("Rgraphviz")
+```
+
 ## Readings
 
 ### Lab 1 National Accounts: rooting the SFC approach in empirical data
