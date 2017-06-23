@@ -1,12 +1,12 @@
 # SFC Summer School in Paris - July 2017
 
-This folder contains all the information regarding the series of three labs organised during the [https://cepn.univ-paris13.fr/applied-stock-flow-consistent-macro-modelling/](Applied Stock-Flow consistent and Agent-based Macro-modelling – Summer School) held in Paris in July 2017
+This folder contains all the information regarding the series of three labs organised during the <a href="https://cepn.univ-paris13.fr/applied-stock-flow-consistent-macro-modelling/">Applied Stock-Flow consistent and Agent-based Macro-modelling – Summer School</a> held in Paris in July 2017
 
 # Prerequisites
 
 ## R and Rstudio
 
-In order to get the most out of the labs, the students are required to have installed [http://www.r-project.org](R) and [http://www.rstudio.com](RStudio). In order to get familiarised with R, there are multiple tutorials and MOOCS online, I recommend the [https://www.coursera.org/learn/r-programming](Coursera R Programming) course but you will find many others. The studentds are also required to do the following homework in `Swirl`.
+In order to get the most out of the labs, the students are required to have installed <a href="http://www.r-project.org2>R</a> and <a href="http://www.rstudio.com">RStudio</a>. In order to get familiarised with R, there are multiple tutorials and MOOCS online, I recommend the [https://www.coursera.org/learn/r-programming](Coursera R Programming) course but you will find many others. The studentds are also required to do the following homework in `Swirl`.
 
 ### Swirl
 
@@ -104,4 +104,4 @@ Godley, W. and M. Lavoie (2007) “Monetary Economics: An Integrated Approach to
 
 Burgess, S., Burrows, O., Godin, A., Kinsella, S. and S. Millard (2016) "A dynamic model of financial balances for the United Kingdom". Bank of England *Staff Working Paper*, no. 614.
 
-[https://github.com/S120/PKSFC/tree/master/Tutorials](PKSFC Tutotial webpages)
+[https://github.com/S120/PKSFC/tree/master/Tutorials](PKSFC Tutorial webpages)
