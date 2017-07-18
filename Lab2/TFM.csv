@@ -1,0 +1,7 @@
+,Households,Firms,Government,CentralBank
+Consumption,-C,+C,,
+Gov.Exp.,,+G,-G,
+InterestsHouseholds,intBh,,-intBh,
+InterestsCB,,,-intBcb,intBcb
+CB profits,,,intBcb,-intBcb
+Taxes,-T,,+T,
