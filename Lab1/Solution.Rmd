@@ -1,0 +1,169 @@
+---
+title: "Lab 1 - Solution"
+author: "Antoine Godin (Kingston University)"
+date: "Agent-based and stock-flow consistent modelling: theory and applications - Paris - July 17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Using pdfetch
+
+To use pdfetch, you need first to load the library
+
+```{r, echo=T,eval=T}
+library(pdfetch)
+```
+
+To get to the three stock-flow norms of Godley, we need to download the following datasets. We will first get the data from the national accounts (GDP)
+```{r, echo=T,eval=T}
+# Selecting just GDP
+names<-c("B1GQ")
+GDP_raw <- pdfetch_EUROSTAT("nama_10_gdp", UNIT="CP_MNAC",NA_ITEM=names, from ="1994-12-31")
+GDP <- as.data.frame(GDP_raw)
+```
+
+Then we will get the tax rebenues from the sectoral accounts
+```{r, echo=T,eval=T}
+# Selecting gov revenue (taxes)
+names<-c("OTR")
+TAX_raw <- pdfetch_EUROSTAT("nasa_10_nf_tr", UNIT="CP_MNAC", NA_ITEM=names, SECTOR=c("S13"), DIRECT = c("RECV"), from="1994-12-31")
+TAX <- as.data.frame(TAX_raw)
+```
+
+Followed by the net lending position from the government (i.e. its deficit) and the rest of the word (i.e the sum of the trade balance and all transfers from and out of the RoW, i.e. the current account balance) from the sectorial accounts.
+
+```{r, echo=T,eval=T}
+# Selecting gov revenue (taxes)
+names<-c("B9")
+NL_raw <- pdfetch_EUROSTAT("nasa_10_nf_tr", UNIT="CP_MNAC", NA_ITEM=names, SECTOR=c("S2","S13"), DIRECT = c("RECV"), from="1994-12-31")
+NL <- as.data.frame(NL_raw)
+```
+
+Then we look for total government expenditures still from the sectorial accounts.
+```{r, echo=T,eval=T}
+# Selecting gov expenditure
+names<-c("OTE")
+GOVSPEND_raw <- pdfetch_EUROSTAT("nasa_10_nf_tr", UNIT="CP_MNAC", NA_ITEM=names, SECTOR=c("S13"), DIRECT = c("PAID"), from="1994-12-31")
+GOVSPEND <- as.data.frame(GOVSPEND_raw)
+```
+
+And then finally imports and exports (from the national accounts).
+```{r, echo=T,eval=T}
+##Now create the trade ratio using the average propensity to import
+# Selecting total imports
+names<-c("P7","P6")
+TRADE_raw <- pdfetch_EUROSTAT("nama_10_gdp", UNIT="CP_MNAC", NA_ITEM=names, SECTOR=c("S1"), DIRECT = c("PAID"), from="1994-12-31")
+TRADE <- as.data.frame(TRADE_raw)
+```
+
+The next thing to do is to select a few countries. To do so, we will first look at all the countries appearing at least once in each dataset. I then select a subset of these countries:
+```{r, echo=T,eval=T}
+coltradenames<-colnames(TRADE)
+countrytrade<-as.data.frame(strsplit(coltradenames,"\\."),stringsAsFactors = F)[4,]
+coltaxnames<-colnames(TAX)
+countrytax<-as.data.frame(strsplit(coltaxnames,"\\."),stringsAsFactors = F)[6,]
+colgdpnames<-colnames(GDP)
+countrygdp<-as.data.frame(strsplit(colgdpnames,"\\."),stringsAsFactors = F)[4,]
+colspendnames<-colnames(GOVSPEND)
+countrygspend<-as.data.frame(strsplit(colspendnames,"\\."),stringsAsFactors = F)[6,]
+colnlnames<-colnames(NL)
+countrynl<-as.data.frame(strsplit(colnlnames,"\\."),stringsAsFactors = F)[6,]
+
+allcountries<-unlist(unique(c(countrytrade,countrytax,countrygdp,countrygspend,countrynl)))
+mycountries<-allcountries[c(2,3,8,9,14,15,19,22,24)]
+mycountry_names<-c("Austria","Belgium","Germany","Denmark","Greece","Spain","France","Ireland","Italy")
+```
+
+Now I want to plot the three ratios for the 9 countries I selected here above. I will plot all the combined ratios in a png so that I can compare them.
+```{r, echo=T, eval=T, fig.width=14}
+png(filename=paste("AllCountries_CombinedRatio",".png",sep=""))
+#Dividing the plot into 4 sub-plots (2 by 2)
+par(mfrow = c(3,3))
+#country<-allcountries[2]
+for(i in 1:length(mycountries)){
+	country<-mycountries[i]
+	tax<-TAX[,grep(country,coltaxnames)]
+	gdp<-GDP[,grep(country,colgdpnames)]
+	govspend<-GOVSPEND[,grep(country,colspendnames)]
+	trade<-TRADE[,grep(country,coltradenames)]
+	nl<-NL[,grep(country,colnlnames)]
+	if(ncol(cbind(tax,gdp,govspend,trade))==5){
+		# creating new data frame for the Average Tax Rate
+		average_tax <- tax/gdp
+		# creating the fiscal ratio
+		fiscal_ratio <- govspend/average_tax
+		# creating the average propensity to import
+		prop_import <- trade[,2]/gdp
+		# creating the trade ratio itself
+		trade_ratio <- trade[,1]/prop_import
+		###Finally create the combined fiscal and trade ration
+		comb_fiscal_trade <- (govspend+trade[,1])/(average_tax+prop_import)
+		#Plot 1 .
+		matplot(1995:2015,cbind(gdp,comb_fiscal_trade),type="l",main=mycountry_names[i],col=1:2,lty=1:2,ylab="",xlab="")
+	}
+}
+dev.off()
+
+png(filename=paste("AllCountries_TradeRatio",".png",sep=""))
+#Dividing the plot into 4 sub-plots (2 by 2)
+par(mfrow = c(3,3))
+#country<-allcountries[2]
+for(i in 1:length(mycountries)){
+	country<-mycountries[i]
+	tax<-TAX[,grep(country,coltaxnames)]
+	gdp<-GDP[,grep(country,colgdpnames)]
+	govspend<-GOVSPEND[,grep(country,colspendnames)]
+	trade<-TRADE[,grep(country,coltradenames)]
+	nl<-NL[,grep(country,colnlnames)]
+	if(ncol(cbind(tax,gdp,govspend,trade))==5){
+		# creating new data frame for the Average Tax Rate
+		average_tax <- tax/gdp
+		# creating the fiscal ratio
+		fiscal_ratio <- govspend/average_tax
+		# creating the average propensity to import
+		prop_import <- trade[,2]/gdp
+		# creating the trade ratio itself
+		trade_ratio <- trade[,1]/prop_import
+		###Finally create the combined fiscal and trade ration
+		comb_fiscal_trade <- (govspend+trade[,1])/(average_tax+prop_import)
+		#Plot 1 .
+		matplot(1995:2015,cbind(gdp,trade_ratio),type="l",main=mycountry_names[i],col=1:2,lty=1:2,ylab="",xlab="")
+	}
+}
+
+dev.off()
+
+png(filename=paste("AllCountries_FiscalRatio",".png",sep=""))
+#Dividing the plot into 4 sub-plots (2 by 2)
+par(mfrow = c(3,3))
+#country<-allcountries[2]
+for(i in 1:length(mycountries)){
+	country<-mycountries[i]
+	tax<-TAX[,grep(country,coltaxnames)]
+	gdp<-GDP[,grep(country,colgdpnames)]
+	govspend<-GOVSPEND[,grep(country,colspendnames)]
+	trade<-TRADE[,grep(country,coltradenames)]
+	nl<-NL[,grep(country,colnlnames)]
+	if(ncol(cbind(tax,gdp,govspend,trade))==5){
+		# creating new data frame for the Average Tax Rate
+		average_tax <- tax/gdp
+		# creating the fiscal ratio
+		fiscal_ratio <- govspend/average_tax
+		# creating the average propensity to import
+		prop_import <- trade[,2]/gdp
+		# creating the trade ratio itself
+		trade_ratio <- trade[,1]/prop_import
+		###Finally create the combined fiscal and trade ration
+		comb_fiscal_trade <- (govspend+trade[,1])/(average_tax+prop_import)
+		#Plot 1 .
+		matplot(1995:2015,cbind(gdp,fiscal_ratio),type="l",main=mycountry_names[i],col=1:2,lty=1:2,ylab="",xlab="")
+	}
+}
+
+dev.off()
+```
+
+After running the code, you should have 3 pngs created in your working directory.
