@@ -1,0 +1,152 @@
+---
+title: "Lab 2 - Solution"
+author: "Antoine Godin (Kingston University)"
+date: "Agent-based and stock-flow consistent modelling: theory and applications - Paris - July 17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Using pksfc
+
+To show how to use the package PKSFC, we will see the various step used in the lecture to update the model PC. First we need to load the package
+
+```{r,echo=T, message=FALSE}
+library(PKSFC)
+```
+
+Then, you need to download the two attached 'SIM.txt' and 'SIMEX.txt' file and save it in the folder of your choice. Make sure to set the working directory where you saved the downloaded file. In command line this looks like this but if you use Rstudio, you can use the graphical interface as well (Session>Set Working Directory>Choose Directory)
+```{r,echo=T, eval=FALSE}
+setwd("pathToYourDirectory")
+```
+
+## Loading the model
+
+The first thing to do is to load the model and check for completeness.
+```{r,echo=T}
+pcex<-sfc.model("Models/PCEX.txt",modelName="Portfolio Choice Model")
+pcex<-sfc.check(pcex,fill=FALSE)
+```
+
+We are now ready to simulate the model
+```{r,echo=T}
+datapcex<-simulate(pcex)
+```
+
+## Adding the Maastricht treaty: 1 Rational Government
+
+```{r,echo=T,eval=T}
+#Computing the targeted tax rate
+init <- as.data.frame(t(datapcex$baseline[66,]))
+alpha1<-init$alpha1
+alpha2<-init$alpha2
+alpha<-(1-alpha1)/alpha2
+r<-init$r
+lambda0<-init$lambda0
+lambda1<-init$lambda1
+lambda2<-init$lambda2
+lambda<-lambda0+lambda1*r
+M<-0.6
+newTheta <- (alpha/M+r*(lambda*alpha-lambda2)-1)/(alpha/M+r*(lambda*alpha-lambda2))
+```
+
+### Adding a scenario
+
+Changing the value of the tax rate to its optimal value
+
+```{r,echo=T,eval=T}
+pcex<-sfc.addScenario(pcex,c("theta"),c(newTheta),c(1960),c(2010),init)
+#Simulation
+datapcex<-simulate(pcex)
+```
+
+
+### Doing some plots
+
+1. debt to gdp
+```{r,echo=T,eval=T}
+#Plots the results
+plot(pcex$time,datapcex$scenario_1[,"v"]/datapcex$scenario_1[,"y"],
+	type="l",xlab="",ylab="",xlim=range(pcex$time),main="Debt to GDP")
+```
+
+2. gdp, consumption and disposable income
+```{r,echo=T,eval=T}
+plot(pcex$time,datapcex$scenario_1[,"y"],type="l",xlab="",ylab="",
+	xlim=range(pcex$time),ylim=range(datapcex$scenario_1[,c("cons","yd","y")],na.rm=T))
+lines(pcex$time,datapcex$scenario_1[,"cons"],lty=2)
+lines(pcex$time,datapcex$scenario_1[,"yd"],lty=3)
+legend(x=1970,y=110,legend=c("GDP","Consumption","Disposable Income"),lty=c(1,2,3),bty="n")
+```
+
+## A (somewhat) Rational Government
+
+Updating the model to a growth government expenditure model
+```{r,echo=T,eval=T}
+pcexgr<-sfc.addEqu(pcex,"g","g(-1)*(1+grg)","government expenditures")
+pcexgr<-sfc.editVar(pcexgr,var="theta",init=newTheta)
+pcexgr<-sfc.addVar(pcexgr,var="grg",init=0,desc="Government expenditure growth")
+pcexgr$scenarios<-NULL
+pcexgr<-sfc.addScenario(pcexgr,list(c("grg")),list(c(0.03)),1960,1982,init)
+pcexgr<-sfc.check(pcexgr)
+
+
+#Simulation
+datapcex2<-simulate(pcexgr)
+```
+
+###Plots the results
+
+1. Deficit to GDP
+```{r,echo=T,eval=T}
+plot(pcexgr$time[2:66],(datapcex2$scenario_1[2:66,"v"]-datapcex2$scenario_1[1:65,"v"])
+		/datapcex2$scenario_1[2:66,"y"],type="l",xlab="",ylab="",
+		xlim=range(pcexgr$time),main="Deficit to GDP")
+```
+
+2. gdp, consumption and disposable income
+```{r,echo=T,eval=T}
+plot(pcexgr$time,datapcex2$scenario_1[,"y"],type="l",xlab="",ylab="",
+	xlim=range(pcexgr$time),ylim=range(datapcex2$scenario_1[,c("cons","yd","y")],na.rm=T))
+lines(pcexgr$time,datapcex2$scenario_1[,"cons"],lty=2)
+lines(pcexgr$time,datapcex2$scenario_1[,"yd"],lty=3)
+legend(x=1965,y=110,legend=c("GDP","Consumption","Disposable Income"),lty=c(1,2,3),bty="n")
+```
+
+## A (more) Rational Government
+
+Updating the model to endogenous tax rate model
+```{r,echo=T,eval=T}
+theta<-0.2
+pcexgr2<-sfc.addEqu(pcex,"g","g(-1)*(1+grg)","government expenditures")
+pcexgr2<-sfc.addEqu(pcexgr2,"theta","theta(-1)+dtheta","Tax rate")
+pcexgr2<-sfc.addVar(pcexgr2,var="grg",init=0,desc="Government expenditure growth")
+pcexgr2<-sfc.addVar(pcexgr2,var="dtheta",init=0,desc="Tax rate variation")
+pcexgr2$scenarios<-NULL
+pcexgr2<-sfc.addScenario(pcexgr2,list(c("grg","dtheta")),list(c(0.03,(newTheta-theta)/24))
+					,1960,1982,init)
+pcexgr2<-sfc.check(pcexgr2)
+
+#Simulation
+datapcex3<-simulate(pcexgr2)
+```
+
+###Plots the results
+
+1. Deficit to GDP
+```{r,echo=T,eval=T}
+plot(pcexgr$time[2:66],(datapcex3$scenario_1[2:66,"v"]-datapcex3$scenario_1[1:65,"v"])
+		/datapcex3$scenario_1[2:66,"y"],type="l",xlab="",ylab="",xlim=range(pcexgr$time),
+		main="Deficit to GDP")
+```
+
+2. gdp, consumption and disposable income
+```{r,echo=T,eval=T}
+plot(pcexgr$time,datapcex3$scenario_1[,"y"],type="l",xlab="",ylab="",
+	xlim=range(pcexgr$time),ylim=range(datapcex3$scenario_1[,c("cons","yd","y")],na.rm=T))
+lines(pcexgr$time,datapcex3$scenario_1[,"cons"],lty=2)
+lines(pcexgr$time,datapcex3$scenario_1[,"yd"],lty=3)
+legend(x=1965,y=110,legend=c("GDP","Consumption","Disposable Income"),lty=c(1,2,3),bty="n")
+```
