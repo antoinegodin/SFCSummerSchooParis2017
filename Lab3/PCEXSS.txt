@@ -1,0 +1,47 @@
+#######Determination of output - eq. 4.1
+#y = cons + g
+y=100
+#######Disposable income - eq. 4.2
+yde = yd
+#######Disposable income - eq. 4.2
+yd = y - t + r*b_h
+#######Tax payments - eq. 4.3
+t = theta*(y + r*b_h)
+#######Wealth accumulation - eq. 4.4
+#v = v + (yd - cons)
+cons = yd
+#######Wealth accumulation - eq. 4.4
+ve = v
+#######Consumption function - eq. 4.5
+#cons = alpha1*yde + alpha2*v
+#v=yd*(1-alpha1)/alpha2
+alpha2=yd*(1-alpha1)/v
+v=y*debtToGdp
+#######Cash money - eq. 4.6
+h_h = v - b_h 
+#######Cash money - eq. 4.6
+h_d = ve - b_h
+#######Demand for government bills - eq. 4.7
+#b_h = v*(lambda0 + lambda1*r - lambda2*(yde/ve))
+lambda0 = bondsToWealth-lambda1*r + lambda2*yd/v
+b_h = bondsToWealth*v
+#######Supply of government bills - eq. 4.8
+#b_s = b_s + (g + r*b_s) - (t + r*b_cb)
+b_s = v
+g = t+r*(b_cb-b_s)
+######Supply of cash - eq. 4.9
+h_s = b_cb
+#######Government bills held by the central bank - eq. 4.10
+b_cb = b_s - b_h
+#######Interest rate as policy instrument - eq. 4.11
+r = r_bar
+govToGdp = g/y
+#######Calibration Part
+theta = 0.20
+debtToGdp =1.1
+r_bar = 0.02
+alpha1 = 0.9
+bondsToWealth = thelambda1 = 0.1
+lambda2 = 0.1
+#######End of model
+timeline 1 2
