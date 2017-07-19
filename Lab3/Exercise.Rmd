@@ -1,0 +1,14 @@
+---
+title: "Lab 3 - Exercise"
+author: "Antoine Godin (Kingston University)"
+date: "Agent-based and stock-flow consistent modelling: theory and applications - Paris - July 17"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+You are to calibrate the BMW model, chapter 7 from Godley and Lavoie (2007) for a country of your choice, using Eurostat data. You can use either the Backward induction and massaged data technique.
+
+Detail your calibration procedure, explaining the various choices you made. I want you to then simulate the model, chosing a scenario that you find relevant. Comment on the results of the simulation.
